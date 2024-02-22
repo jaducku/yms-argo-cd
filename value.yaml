@@ -1,0 +1,30 @@
+image:
+  repository: yourname/your-app
+  tag: latest
+
+cronjobs:
+  app1:
+    schedule: "0 * * * *"
+    args: ["com.example.App1", "mode1"]
+    successfulJobsHistoryLimit: 5
+    failedJobsHistoryLimit: 3
+    resources:
+      limits:
+        cpu: "1"
+        memory: "1Gi"
+      requests:
+        cpu: "500m"
+        memory: "512Mi"
+  app2:
+    schedule: "30 * * * *"
+    args: ["com.example.App2", "mode2"]
+    resources:
+      limits:
+        cpu: "500m"
+        memory: "512Mi"
+
+db:
+  secretName: my-db-secret
+
+  git config --global user.name "jaducku"
+git config --global user.email jaducku@gmail.com

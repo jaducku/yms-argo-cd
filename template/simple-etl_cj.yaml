@@ -1,0 +1,29 @@
+{{- range $name, $job := .Values.cronjobs }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ $name }}
+spec:
+  schedule: "{{ $job.schedule }}"
+  successfulJobsHistoryLimit: {{ $job.successfulJobsHistoryLimit | default 3 }}
+  failedJobsHistoryLimit: {{ $job.failedJobsHistoryLimit | default 1 }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: {{ $name }}
+            image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag }}"
+            args: ["java", "-cp", "/your-app.jar"] + {{ $job.args | toYaml | nindent 12 }}
+            env:
+              - name: DB_SECRET_NAME
+                value: {{ $.Values.db.secretName }}
+            resources:
+              limits:
+                cpu: {{ $job.resources.limits.cpu | default "500m" }}
+                memory: {{ $job.resources.limits.memory | default "512Mi" }}
+              requests:
+                cpu: {{ $job.resources.requests.cpu | default "250m" }}
+                memory: {{ $job.resources.requests.memory | default "256Mi" }}
+          restartPolicy: OnFailure
+{{- end }}
