@@ -25,6 +25,3 @@ cronjobs:
 
 db:
   secretName: my-db-secret
-
-  git config --global user.name "jaducku"
-git config --global user.email jaducku@gmail.com
